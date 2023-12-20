@@ -15,10 +15,10 @@ M_Token *init_token(char *value)
     return new_token;
 }
 
-M_Token *tokenize(M_File *file, char *contents)
+M_Token *tokenize(int token_count, char *contents)
 {
 
-    M_Token *tokens = malloc(file->token_count * sizeof(M_Token)); // Adjust the size accordingly
+    M_Token *tokens = malloc(token_count * sizeof(M_Token)); // Adjust the size accordingly
     int current_token_index = 0;
     for (int i = 0; i < strlen(contents); i++)
     {
@@ -42,6 +42,7 @@ M_Token *tokenize(M_File *file, char *contents)
 
             M_Token token;
             token.value = strdup(buffer);
+            token.token_type = 0;
             tokens[current_token_index++] = token;
         }
 
@@ -51,11 +52,22 @@ M_Token *tokenize(M_File *file, char *contents)
             specialBuffer[0] = contents[i];
             specialBuffer[1] = '\0';
 
-            M_Token specialToken;
+            M_Token specialToken; // maybe use pointer to m_token here instead, that way we can free it
             specialToken.value = strdup(specialBuffer);
+            specialToken.token_type = 0;
             tokens[current_token_index++] = specialToken;
         }
     }
 
     return tokens;
+}
+
+void free_token_array(int token_count, M_Token *token_array)
+{
+    for (int i = 0; i < token_count; i++)
+    {
+        free(token_array[i].value);
+    }
+
+    free(token_array);
 }

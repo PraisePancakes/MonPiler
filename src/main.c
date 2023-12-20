@@ -3,6 +3,7 @@
 #include <string.h>
 #include "../include/file.h"
 #include "../include/tokenizer.h"
+#include "../include/lexer.h"
 
 int main(int argc, char *argv[])
 {
@@ -21,15 +22,17 @@ int main(int argc, char *argv[])
 
     new_file->word_count = word_count;
     new_file->token_count = token_count;
-    M_Token *test = tokenize(new_file, new_file->contents);
+    M_Token *token_array = tokenize(new_file->token_count, new_file->contents);
 
     printf("Word count : %d \n", word_count);
     printf("Token count : %d \n", new_file->token_count);
-    printf("contents : %s", new_file->contents);
+    printf("contents : %s \n", new_file->contents);
+
+    Lexer *lexed_token_array = lex_tokens(new_file->token_count, token_array);
 
     for (int i = 0; i < new_file->token_count; i++)
     {
-        printf("%s -> ", test[i].value);
+        printf("[ %s -- %d ]-> ", lexed_token_array->token_array[i].value, lexed_token_array->token_array[i].token_type);
     }
 
     return EXIT_SUCCESS;

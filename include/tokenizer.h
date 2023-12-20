@@ -9,7 +9,6 @@ typedef struct M_Token
 } M_Token;
 
 M_Token *init_token(char *value);
-int get_token_count(char *contents);
-M_Token *tokenize(M_File *file, char *contents);
+M_Token *tokenize(int token_count, char *contents);
 
 #endif
