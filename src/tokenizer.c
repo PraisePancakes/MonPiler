@@ -10,7 +10,7 @@ M_Token *init_token(char *value)
     M_Token *new_token = malloc(sizeof(M_Token));
     new_token->value = malloc(strlen(value) + 1);
     strcpy(new_token->value, value);
-    new_token->value = 0;
+    new_token->token_type = 0;
 
     return new_token;
 }
@@ -40,10 +40,8 @@ M_Token *tokenize(int token_count, char *contents)
             }
             buffer[j] = '\0';
 
-            M_Token token;
-            token.value = strdup(buffer);
-            token.token_type = 0;
-            tokens[current_token_index++] = token;
+            M_Token *new_token = init_token(buffer);
+            tokens[current_token_index++] = *new_token;
         }
 
         if (contents[i] == '(' || contents[i] == ')' || contents[i] == ',' || contents[i] == ';')
@@ -52,10 +50,8 @@ M_Token *tokenize(int token_count, char *contents)
             specialBuffer[0] = contents[i];
             specialBuffer[1] = '\0';
 
-            M_Token specialToken; // maybe use pointer to m_token here instead, that way we can free it
-            specialToken.value = strdup(specialBuffer);
-            specialToken.token_type = 0;
-            tokens[current_token_index++] = specialToken;
+            M_Token *new_token = init_token(specialBuffer);
+            tokens[current_token_index++] = *new_token;
         }
     }
 
