@@ -32,7 +32,7 @@ int main(int argc, char *argv[])
 
     for (int i = 0; i < new_file->token_count; i++)
     {
-        printf("TOKEN %d (token_value : %s || token_type : %d) -> ", i + 1, lexed_token_array->token_array[i].value, lexed_token_array->token_array[i].token_type);
+        printf("TOKEN %d (token_value : %s\t\t|| token_type : %d) \n", i + 1, lexed_token_array->token_array[i].value, lexed_token_array->token_array[i].token_type);
     }
 
     return EXIT_SUCCESS;
