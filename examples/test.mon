@@ -1,1 +1,4 @@
-this is a test
+
+function main : int(a : char, b : int, c : int[]) {
+    return 0;
+}
