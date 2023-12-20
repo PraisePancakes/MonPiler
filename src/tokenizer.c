@@ -61,13 +61,3 @@ M_Token *tokenize(int token_count, char *contents)
 
     return tokens;
 }
-
-void free_token_array(int token_count, M_Token *token_array)
-{
-    for (int i = 0; i < token_count; i++)
-    {
-        free(token_array[i].value);
-    }
-
-    free(token_array);
-}
