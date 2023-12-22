@@ -8,7 +8,13 @@ typedef struct M_Token
     int token_type;
 } M_Token;
 
+typedef struct M_TNode
+{
+    struct M_TNode *next;
+    M_Token *token_data;
+} M_TNode;
+
 M_Token *init_token(char *value);
-M_Token *tokenize(int token_count, char *contents);
+M_TNode *tokenize(int token_count, char *contents);
 
 #endif

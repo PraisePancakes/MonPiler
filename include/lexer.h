@@ -27,10 +27,12 @@ typedef struct Lexer
         T_SEMI_COLON,
     } M_TOKEN_TYPE;
 
-    M_Token *token_array;
+    M_TNode *root;
 } Lexer;
 
-Lexer *lex_tokens(int token_count, M_Token *token_array);
+// populates the token types of each token node and returns the lexed_tokens
+Lexer *lex_tokens(int token_count, M_TNode *root);
+void display_lexed_tokens(Lexer *lexed_tokens);
 bool is_number(char *src);
 
 #endif

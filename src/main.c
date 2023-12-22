@@ -5,13 +5,19 @@
 #include "../include/tokenizer.h"
 #include "../include/lexer.h"
 
+void usage(char *argv[])
+{
+    printf("USAGE: %s <path/to/inputfile.mon> \n", argv[0]);
+}
+
 int main(int argc, char *argv[])
 {
 
     if (argc < 2)
     {
-        fprintf(stderr, "ERROR: Incorrect usage, less arguments than expected. \nUsage : ./mon <path/to/inputfile.mon> \n");
-        return 1;
+        fprintf(stderr, "ERROR: Incorrect usage, less arguments than expected. \n");
+        usage(argv);
+        return EXIT_FAILURE;
     }
 
     const char *const path_to_src_file = argv[1];
@@ -22,18 +28,16 @@ int main(int argc, char *argv[])
 
     new_file->word_count = word_count;
     new_file->token_count = token_count;
-    M_Token *token_array = tokenize(new_file->token_count, new_file->contents);
+    M_TNode *token_root = tokenize(new_file->token_count, new_file->contents);
 
+    // TEST ----------
     printf("Word count : %d \n", word_count);
     printf("Token count : %d \n", new_file->token_count);
     printf("contents : %s \n", new_file->contents);
 
-    Lexer *lexed_token_array = lex_tokens(new_file->token_count, token_array);
+    Lexer *lexed_tokens = lex_tokens(new_file->token_count, token_root);
 
-    for (int i = 0; i < new_file->token_count; i++)
-    {
-        printf("TOKEN %d (token_value : %s\t\t|| token_type : %d) \n", i + 1, lexed_token_array->token_array[i].value, lexed_token_array->token_array[i].token_type);
-    }
+    display_lexed_tokens(lexed_tokens);
 
     return EXIT_SUCCESS;
 }
