@@ -15,6 +15,27 @@ M_Token *init_token(char *value)
     return new_token;
 }
 
+void add_to_token_llist(M_TNode **root, M_Token *new_token)
+{
+    M_TNode *new_token_node = malloc(sizeof(M_TNode));
+    new_token_node->token_data = new_token;
+    new_token_node->next = NULL;
+
+    if (*root == NULL)
+    {
+        *root = new_token_node;
+    }
+    else
+    {
+        M_TNode *node_iterator = *root;
+        while (node_iterator->next != NULL)
+        {
+            node_iterator = node_iterator->next;
+        }
+        node_iterator->next = new_token_node;
+    }
+}
+
 M_TNode *tokenize(int token_count, char *contents)
 {
     M_TNode *root = NULL;
@@ -40,23 +61,7 @@ M_TNode *tokenize(int token_count, char *contents)
             buffer[j] = '\0';
 
             M_Token *new_token = init_token(buffer);
-            M_TNode *new_token_node = malloc(sizeof(M_TNode));
-            new_token_node->token_data = new_token;
-            new_token_node->next = NULL;
-
-            if (root == NULL)
-            {
-                root = new_token_node;
-            }
-            else
-            {
-                M_TNode *node_iterator = root;
-                while (node_iterator->next != NULL)
-                {
-                    node_iterator = node_iterator->next;
-                }
-                node_iterator->next = new_token_node;
-            }
+            add_to_token_llist(&root, new_token);
         }
 
         if (contents[i] == '(' || contents[i] == ')' || contents[i] == ',' || contents[i] == ';')
@@ -66,23 +71,7 @@ M_TNode *tokenize(int token_count, char *contents)
             specialBuffer[1] = '\0';
 
             M_Token *new_token = init_token(specialBuffer);
-            M_TNode *new_token_node = malloc(sizeof(M_TNode));
-            new_token_node->token_data = new_token;
-            new_token_node->next = NULL;
-
-            if (root == NULL)
-            {
-                root = new_token_node;
-            }
-            else
-            {
-                M_TNode *node_iterator = root;
-                while (node_iterator->next != NULL)
-                {
-                    node_iterator = node_iterator->next;
-                }
-                node_iterator->next = new_token_node;
-            }
+            add_to_token_llist(&root, new_token);
         }
     }
 
