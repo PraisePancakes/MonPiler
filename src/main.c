@@ -37,6 +37,9 @@ int main(int argc, char *argv[])
 
     Lexer *lexed_tokens = lex_tokens(new_file->token_count, token_root);
 
+    // free initial UNLEXED toke_root
+    free_tokens(token_root);
+
     display_lexed_tokens(lexed_tokens);
 
     return EXIT_SUCCESS;
