@@ -7,8 +7,6 @@ typedef struct M_File
     int word_count;
     char *contents;
     int length;
-    int token_count;
-
 } M_File;
 
 int get_file_length(FILE *fp);

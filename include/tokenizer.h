@@ -15,7 +15,7 @@ typedef struct M_TNode
 } M_TNode;
 
 M_Token *init_token(char *value);
-M_TNode *tokenize(int token_count, char *contents);
+M_TNode *tokenize(char *contents);
 void free_tokens(M_TNode *root);
 
 #endif

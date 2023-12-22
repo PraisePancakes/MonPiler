@@ -31,7 +31,7 @@ typedef struct Lexer
 } Lexer;
 
 // populates the token types of each token node and returns the lexed_tokens
-Lexer *lex_tokens(int token_count, M_TNode *root);
+Lexer *lex_tokens(M_TNode *root);
 void display_lexed_tokens(Lexer *lexed_tokens);
 bool is_number(char *src);
 

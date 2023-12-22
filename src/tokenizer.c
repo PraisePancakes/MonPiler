@@ -36,7 +36,7 @@ void add_to_token_llist(M_TNode **root, M_Token *new_token)
     }
 }
 
-M_TNode *tokenize(int token_count, char *contents)
+M_TNode *tokenize(char *contents)
 {
     M_TNode *root = NULL;
 

@@ -28,7 +28,7 @@ void display_lexed_tokens(Lexer *lexed_tokens)
     }
 }
 
-Lexer *lex_tokens(int token_count, M_TNode *root)
+Lexer *lex_tokens(M_TNode *root)
 {
     Lexer *lexed_tokens = malloc(sizeof(Lexer));
     lexed_tokens->root = NULL;
