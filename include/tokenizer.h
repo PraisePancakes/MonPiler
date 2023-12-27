@@ -1,21 +1,43 @@
 #ifndef TOKENIZER_H
 #define TOKENIZER_H
-#include "file.h"
+#include "lexer.h"
+#include <stdbool.h>
+
+/*
+    LEXER WILL TAKE AN ARRAY OF TOKENS, GO THROUGH EACH TOKEN AND ASSIGN A VALUE (TOKEN TYPE) TO THEM
+
+*/
+enum M_TOKEN_TYPE
+{
+    T_KEYWORD,
+    T_IDENTIFIER,
+    T_INTEGER_LITERAL,
+    T_LPAREN,
+    T_RPAREN,
+    T_LBRACE,
+    T_RBRACE,
+    T_LCURL,
+    T_RCURL,
+    T_COLON,
+    T_COMMA,
+    T_SEMI_COLON,
+} M_TOKEN_TYPE;
 
 typedef struct M_Token
 {
-    char *value;
     int token_type;
+    char *token_value;
 } M_Token;
 
 typedef struct M_TNode
 {
     struct M_TNode *next;
-    M_Token *token_data;
+    M_Token *data;
 } M_TNode;
 
-M_Token *init_token(char *value);
-M_TNode *tokenize(char *contents);
-void free_tokens(M_TNode *root);
+// populates the token types of each token node and returns the lexed_tokens
+M_TNode *tokenize(M_LexNode *head);
+void display_tokens(M_TNode *head);
+bool is_number(char *src);
 
 #endif

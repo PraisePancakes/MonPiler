@@ -1,92 +1,130 @@
+
 #include "../include/tokenizer.h"
+#include "../include/lexer.h"
+#include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
 #include <ctype.h>
-#include <stdio.h>
-#include <stdlib.h>
-#define BUFFER_SIZE 1024
 
-M_Token *init_token(char *value)
+bool is_number(char *src)
 {
-    M_Token *new_token = malloc(sizeof(M_Token));
-    new_token->value = malloc(strlen(value) + 1);
-    strcpy(new_token->value, value);
-    new_token->token_type = 0;
-
-    return new_token;
+    for (int i = 0; i < strlen(src); i++)
+    {
+        if (!isdigit(src[i]))
+        {
+            return false;
+        }
+    }
+    return true;
 }
 
-void add_to_token_llist(M_TNode **root, M_Token *new_token)
+void display_tokens(M_TNode *head)
 {
-    M_TNode *new_token_node = malloc(sizeof(M_TNode));
-    new_token_node->token_data = new_token;
-    new_token_node->next = NULL;
+    M_TNode *temp = head;
+    size_t node_iterator = 0;
 
-    if (*root == NULL)
+    while (temp != NULL)
     {
-        *root = new_token_node;
-    }
-    else
-    {
-        M_TNode *node_iterator = *root;
-        while (node_iterator->next != NULL)
-        {
-            node_iterator = node_iterator->next;
-        }
-        node_iterator->next = new_token_node;
+        printf("TOKEN %zu (token_value : %s\t\t\t|| token_type : %d ) \n", node_iterator + 1, temp->data->token_value, temp->data->token_type);
+        temp = temp->next;
+        node_iterator++;
     }
 }
 
-M_TNode *tokenize(char *contents)
+M_TNode *tokenize(M_LexNode *head)
 {
-    M_TNode *root = NULL;
 
-    int current_token_index = 0;
-    for (int i = 0; i < strlen(contents); i++)
+    M_TNode *token_head = NULL;
+    M_TNode *temp = NULL;
+    M_LexNode *lexeme_current_node = head;
+
+    while (lexeme_current_node != NULL)
     {
-        while (isspace(contents[i]))
+
+        M_TNode *new_token_node = malloc(sizeof(M_TNode));
+        new_token_node->data = malloc(sizeof(M_Token));
+        new_token_node->data->token_value = malloc(strlen(lexeme_current_node->value) + 1);
+        new_token_node->next = NULL;
+
+        if (new_token_node->data == NULL || new_token_node->data->token_value == NULL)
         {
-            i++;
+            fprintf(stderr, "ERROR: mallocating lexed_tokens or its value failed");
+            free(new_token_node->data->token_value);
+            free(new_token_node->data);
+            free(new_token_node);
+            exit(EXIT_FAILURE);
         }
 
-        if (!isspace(contents[i]) && contents[i] != '(' && contents[i] != ')' && contents[i] != ',' && contents[i] != ';')
+        strcpy(new_token_node->data->token_value, lexeme_current_node->value);
+
+        if (strcmp(lexeme_current_node->value, "function") == 0)
         {
-            char buffer[BUFFER_SIZE];
-            int j = 0;
-            while (!isspace(contents[i]) && contents[i] != '(' && contents[i] != ')' && contents[i] != ',' && contents[i] != ';')
-            {
-                buffer[j] = contents[i];
-                i++;
-                j++;
-            }
-            buffer[j] = '\0';
-
-            M_Token *new_token = init_token(buffer);
-            add_to_token_llist(&root, new_token);
+            new_token_node->data->token_type = T_KEYWORD;
         }
-
-        if (contents[i] == '(' || contents[i] == ')' || contents[i] == ',' || contents[i] == ';')
+        else if (is_number(lexeme_current_node->value))
         {
-            char specialBuffer[2];
-            specialBuffer[0] = contents[i];
-            specialBuffer[1] = '\0';
-
-            M_Token *new_token = init_token(specialBuffer);
-            add_to_token_llist(&root, new_token);
+            new_token_node->data->token_type = T_INTEGER_LITERAL;
         }
+        else if (strcmp(lexeme_current_node->value, "(") == 0)
+        {
+            new_token_node->data->token_type = T_LPAREN;
+        }
+        else if (strcmp(lexeme_current_node->value, ":") == 0)
+        {
+            new_token_node->data->token_type = T_COLON;
+        }
+        else if (strcmp(lexeme_current_node->value, ")") == 0)
+        {
+            new_token_node->data->token_type = T_RPAREN;
+        }
+        else if (strcmp(lexeme_current_node->value, ",") == 0)
+        {
+            new_token_node->data->token_type = T_COMMA;
+        }
+        else if (strcmp(lexeme_current_node->value, "int") == 0)
+        {
+            new_token_node->data->token_type = T_KEYWORD;
+        }
+        else if (strcmp(lexeme_current_node->value, "char") == 0)
+        {
+            new_token_node->data->token_type = T_KEYWORD;
+        }
+        else if (strcmp(lexeme_current_node->value, "int[]") == 0)
+        {
+            new_token_node->data->token_type = T_KEYWORD;
+        }
+        else if (strcmp(lexeme_current_node->value, "return") == 0)
+        {
+            new_token_node->data->token_type = T_KEYWORD;
+        }
+        else if (strcmp(lexeme_current_node->value, ";") == 0)
+        {
+            new_token_node->data->token_type = T_SEMI_COLON;
+        }
+        else if (strcmp(lexeme_current_node->value, "{") == 0)
+        {
+            new_token_node->data->token_type = T_LCURL;
+        }
+        else if (strcmp(lexeme_current_node->value, "}") == 0)
+        {
+            new_token_node->data->token_type = T_RCURL;
+        }
+        else
+        {
+            new_token_node->data->token_type = T_IDENTIFIER;
+        }
+        if (token_head == NULL)
+        {
+            token_head = new_token_node;
+            temp = token_head;
+        }
+        else
+        {
+            temp->next = new_token_node;
+            temp = temp->next;
+        }
+        lexeme_current_node = lexeme_current_node->next;
     }
 
-    return root;
-}
-
-void free_tokens(M_TNode *root)
-{
-    M_TNode *current = root;
-    while (current != NULL)
-    {
-        M_TNode *next = current->next;
-        free(current->token_data->value);
-        free(current->token_data);
-        free(current);
-        current = next;
-    }
+    return token_head;
 }

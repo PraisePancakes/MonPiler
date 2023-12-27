@@ -27,19 +27,17 @@ int main(int argc, char *argv[])
     int word_count = get_file_word_count(new_file);
 
     new_file->word_count = word_count;
-    M_TNode *token_root = tokenize(new_file->contents);
 
     // TEST ----------
     printf("Word count : %d \n", word_count);
     printf("contents : %s \n", new_file->contents);
 
-    Lexer *lexed_tokens = lex_tokens(token_root);
+    M_LexNode *lexeme_head = lex(new_file->contents);
+    M_TNode *token_head = tokenize(lexeme_head);
 
     // free initial UNLEXED toke_root
-    free_tokens(token_root);
-    display_lexed_tokens(lexed_tokens);
-
-    const char *c_code = parse_program(lexed_tokens);
+    free_lexemes(lexeme_head);
+    display_tokens(token_head);
 
     // pass lexed token root into parser
 
