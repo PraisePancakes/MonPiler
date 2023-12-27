@@ -1,7 +1,6 @@
 #include "../include/tokenizer.h"
 #include <string.h>
 #include <ctype.h>
-#include <stdio.h>
 #include <stdlib.h>
 #define BUFFER_SIZE 1024
 

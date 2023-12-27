@@ -22,10 +22,55 @@ void display_tokens(M_TNode *head)
 {
     M_TNode *temp = head;
     size_t node_iterator = 0;
+    const char *types[] = {
+        "T_AND",
+        "T_ARROW",
+        "T_BANG",
+        "T_BANG_EQUALS",
+        "T_CHAR",
+        "T_CHAR_ARRAY",
+        "T_COLON",
+        "T_COMMA",
+        "T_DOT",
+        "T_DOUBLE",
+        "T_DOUBLE_ARRAY",
+        "T_ELSE",
+        "T_EQUAL",
+        "T_EQUAL_EQUAL",
+        "T_FALSE",
+        "T_FLOAT",
+        "T_FLOAT_ARRAY",
+        "T_FOR",
+        "T_FUNCTION",
+        "T_GT",
+        "T_IDENTIFIER_LITERAL",
+        "T_IF",
+        "T_INT",
+        "T_INT_ARRAY",
+        "T_INTEGER_LITERAL",
+        "T_LBRACE",
+        "T_LCURL",
+        "T_LPAREN",
+        "T_LT",
+        "T_MINUS",
+        "T_NULL",
+        "T_OR",
+        "T_PLUS",
+        "T_PRINT",
+        "T_RETURN",
+        "T_RBRACE",
+        "T_RCURL",
+        "T_RPAREN",
+        "T_SEMI_COLON",
+        "T_SLASH",
+        "T_STAR",
+        "T_STRING_LITERAL",
+        "T_WHILE",
+    };
 
     while (temp != NULL)
     {
-        printf("TOKEN %zu (token_value : %s\t\t\t|| token_type : %d ) \n", node_iterator + 1, temp->data->token_value, temp->data->token_type);
+        printf("TOKEN %zu (token_value : %s\t\t\t|| token_type : %s ) \n", node_iterator + 1, temp->data->token_value, types[temp->data->token_type]);
         temp = temp->next;
         node_iterator++;
     }
@@ -59,7 +104,7 @@ M_TNode *tokenize(M_LexNode *head)
 
         if (strcmp(lexeme_current_node->value, "function") == 0)
         {
-            new_token_node->data->token_type = T_KEYWORD;
+            new_token_node->data->token_type = T_FUNCTION;
         }
         else if (is_number(lexeme_current_node->value))
         {
@@ -83,19 +128,19 @@ M_TNode *tokenize(M_LexNode *head)
         }
         else if (strcmp(lexeme_current_node->value, "int") == 0)
         {
-            new_token_node->data->token_type = T_KEYWORD;
+            new_token_node->data->token_type = T_INT;
         }
         else if (strcmp(lexeme_current_node->value, "char") == 0)
         {
-            new_token_node->data->token_type = T_KEYWORD;
+            new_token_node->data->token_type = T_CHAR;
         }
         else if (strcmp(lexeme_current_node->value, "int[]") == 0)
         {
-            new_token_node->data->token_type = T_KEYWORD;
+            new_token_node->data->token_type = T_INT_ARRAY;
         }
         else if (strcmp(lexeme_current_node->value, "return") == 0)
         {
-            new_token_node->data->token_type = T_KEYWORD;
+            new_token_node->data->token_type = T_RETURN;
         }
         else if (strcmp(lexeme_current_node->value, ";") == 0)
         {
@@ -111,7 +156,7 @@ M_TNode *tokenize(M_LexNode *head)
         }
         else
         {
-            new_token_node->data->token_type = T_IDENTIFIER;
+            new_token_node->data->token_type = T_IDENTIFIER_LITERAL;
         }
         if (token_head == NULL)
         {
