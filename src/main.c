@@ -4,6 +4,7 @@
 #include "../include/file.h"
 #include "../include/tokenizer.h"
 #include "../include/lexer.h"
+#include "../include/parser.h"
 
 void usage(char *argv[])
 {
@@ -24,7 +25,6 @@ int main(int argc, char *argv[])
 
     M_File *new_file = get_file(path_to_src_file);
     int word_count = get_file_word_count(new_file);
-    int token_count = get_file_token_count(new_file);
 
     new_file->word_count = word_count;
     M_TNode *token_root = tokenize(new_file->contents);
@@ -37,8 +37,11 @@ int main(int argc, char *argv[])
 
     // free initial UNLEXED toke_root
     free_tokens(token_root);
-
     display_lexed_tokens(lexed_tokens);
+
+    const char *c_code = parse_program(lexed_tokens);
+
+    // pass lexed token root into parser
 
     return EXIT_SUCCESS;
 }

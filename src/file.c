@@ -90,33 +90,3 @@ int get_file_word_count(M_File *file)
 
     return word_count;
 }
-
-int get_file_token_count(M_File *file)
-{
-    int token_count = 0;
-    for (int i = 0; i < strlen(file->contents); i++)
-    {
-        while (isspace(file->contents[i]))
-        {
-            i++;
-        }
-
-        if (!isspace(file->contents[i]))
-        {
-
-            while (!isspace(file->contents[i]) && file->contents[i] != '(' && file->contents[i] != ')' && file->contents[i] != ',' && file->contents[i] != ';')
-            {
-
-                i++;
-            }
-            token_count++;
-        }
-
-        if (file->contents[i] == '(' || file->contents[i] == ')' || file->contents[i] == ',' || file->contents[i] == ';')
-        {
-            token_count++;
-        }
-    }
-
-    return token_count;
-};

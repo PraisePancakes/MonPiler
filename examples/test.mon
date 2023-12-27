@@ -1,4 +1,4 @@
 
-function main : int(a : char, b : int, c : int[]) {
+function main : int() {
     return 0;
 }

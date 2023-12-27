@@ -63,6 +63,7 @@ Lexer *lex_tokens(M_TNode *root)
         strcpy(new_lexed_node->token_data->value, current_token->value);
 
         // Assign token_type based on value
+
         if (strcmp(current_token->value, "function") == 0)
         {
             new_lexed_node->token_data->token_type = T_KEYWORD;
