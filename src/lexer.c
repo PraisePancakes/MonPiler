@@ -33,6 +33,74 @@ void add_to_lexeme_llist(M_LexNode **root, char *value)
     }
 }
 
+char peek(const char *const src, size_t current_index)
+{
+    if (current_index > strlen(src))
+    {
+        return '\0';
+    }
+    else if (isspace(src[current_index]))
+    {
+        return '\0';
+    }
+    return src[current_index];
+}
+
+char consume(const char *const src, size_t current_index)
+{
+    return src[current_index++];
+}
+/*
+for (int i = 0; i < strlen(src); i++) {
+    while (peek(src, i) == '\0') {
+      i++;
+    }
+    int buffer_index = 0;
+    char buf[MAX_BUFF] = "";
+    while (peek(src, i) != '\0') {
+      char c = consume(src, i);
+      switch (c) {
+      case '(':
+        char buf[2] = "";
+        buf[0] = c;
+        buf[1] = '\0'
+        add_to_lexeme_llist(&root, buf);
+        i++;
+        break;
+      case ')':
+        char buf[2] = "";
+        buf[0] = c;
+        buf[1] = '\0'
+        add_to_lexeme_llist(&root, buf);
+        i++;
+        break;
+      case ',':
+        char buf[2] = "";
+        buf[0] = c;
+        buf[1] = '\0'
+        add_to_lexeme_llist(&root, buf);
+        i++;
+        break;
+      case ';':
+        char buf[2] = "";
+        buf[0] = c;
+        buf[1] = '\0'
+        add_to_lexeme_llist(&root, buf);
+        i++;
+        break;
+        default :
+      }
+      buf[buffer_index] = c;
+      buffer_index++;
+      i++;
+    }
+    buf[buffer_index] = '\0';
+    add_to_lexeme_llist(&root, buf);
+    printf("%s\n", buf);
+  }
+
+*/
+// implement peek and consume on characters
 M_LexNode *lex(char *contents)
 {
     M_LexNode *root = NULL;
@@ -40,7 +108,7 @@ M_LexNode *lex(char *contents)
     int current_lexeme_index = 0;
     for (int i = 0; i < strlen(contents); i++)
     {
-        while (isspace(contents[i]))
+        while (peek(contents, i) == '\0') //while ;
         {
             i++;
         }
