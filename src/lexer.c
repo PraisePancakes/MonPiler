@@ -2,54 +2,39 @@
 #include <string.h>
 #include <ctype.h>
 #include <stdlib.h>
+#include <stdio.h>
+#include <stdbool.h>
 #define BUFFER_SIZE 1024
 
 M_LexNode *init_lexeme(char *value)
 {
-    M_LexNode *new_lexeme = malloc(sizeof(M_LexNode));
-    new_lexeme->value = malloc(strlen(value) + 1);
-    strcpy(new_lexeme->value, value);
-    new_lexeme->next = NULL;
+  M_LexNode *new_lexeme = malloc(sizeof(M_LexNode));
+  new_lexeme->value = malloc(strlen(value) + 1);
+  strcpy(new_lexeme->value, value);
+  new_lexeme->next = NULL;
 
-    return new_lexeme;
+  return new_lexeme;
 }
 
 void add_to_lexeme_llist(M_LexNode **root, char *value)
 {
-    M_LexNode *new_lex_node = init_lexeme(value);
+  M_LexNode *new_lex_node = init_lexeme(value);
 
-    if (*root == NULL)
+  if (*root == NULL)
+  {
+    *root = new_lex_node;
+  }
+  else
+  {
+    M_LexNode *node_iterator = *root;
+    while (node_iterator->next != NULL)
     {
-        *root = new_lex_node;
+      node_iterator = node_iterator->next;
     }
-    else
-    {
-        M_LexNode *node_iterator = *root;
-        while (node_iterator->next != NULL)
-        {
-            node_iterator = node_iterator->next;
-        }
-        node_iterator->next = new_lex_node;
-    }
+    node_iterator->next = new_lex_node;
+  }
 }
 
-char peek(const char *const src, size_t current_index)
-{
-    if (current_index > strlen(src))
-    {
-        return '\0';
-    }
-    else if (isspace(src[current_index]))
-    {
-        return '\0';
-    }
-    return src[current_index];
-}
-
-char consume(const char *const src, size_t current_index)
-{
-    return src[current_index++];
-}
 /*
 for (int i = 0; i < strlen(src); i++) {
     while (peek(src, i) == '\0') {
@@ -101,54 +86,77 @@ for (int i = 0; i < strlen(src); i++) {
 
 */
 // implement peek and consume on characters
+
+char peek(const char *const src, size_t current_index)
+{
+  const size_t byte_offset = 1;
+
+  if (current_index > strlen(src))
+  {
+    return '\0';
+  }
+  return src[current_index];
+}
+
+char consume(const char *const src, size_t *current_index)
+{
+
+  return src[(*current_index)++];
+}
+
+bool is_punctuation(char c)
+{
+  return (c == '(' || c == ')' || c == ',' || c == ';' || c == ':' || c == '{' || c == '}');
+}
+
 M_LexNode *lex(char *contents)
 {
-    M_LexNode *root = NULL;
+  M_LexNode *root = NULL;
 
-    int current_lexeme_index = 0;
-    for (int i = 0; i < strlen(contents); i++)
+  int i = 0;
+
+  while (peek(contents, i) != '\0')
+  {
+    char c = peek(contents, i);
+    while (isspace(c))
     {
-        while (peek(contents, i) == '\0') //while ;
-        {
-            i++;
-        }
-
-        if (!isspace(contents[i]) && contents[i] != '(' && contents[i] != ')' && contents[i] != ',' && contents[i] != ';')
-        {
-            char buffer[BUFFER_SIZE];
-            int j = 0;
-            while (!isspace(contents[i]) && contents[i] != '(' && contents[i] != ')' && contents[i] != ',' && contents[i] != ';')
-            {
-                buffer[j] = contents[i];
-                i++;
-                j++;
-            }
-            buffer[j] = '\0';
-
-            add_to_lexeme_llist(&root, buffer);
-        }
-
-        if (contents[i] == '(' || contents[i] == ')' || contents[i] == ',' || contents[i] == ';')
-        {
-            char specialBuffer[2];
-            specialBuffer[0] = contents[i];
-            specialBuffer[1] = '\0';
-
-            add_to_lexeme_llist(&root, specialBuffer);
-        }
+      consume(contents, &i);
+      c = peek(contents, i);
     }
 
-    return root;
+    if (!is_punctuation(c))
+    {
+      char buf[BUFFER_SIZE];
+      int j = 0;
+
+      while (!isspace(c) && !is_punctuation(c))
+      {
+        buf[j++] = consume(contents, &i);
+        c = peek(contents, i);
+      }
+      buf[j] = '\0';
+      add_to_lexeme_llist(&root, buf);
+    }
+    else
+    {
+      char special_buf[2];
+      special_buf[0] = consume(contents, &i);
+      special_buf[1] = '\0';
+      add_to_lexeme_llist(&root, special_buf);
+    }
+  }
+
+  return root;
 }
 
 void free_lexemes(M_LexNode *root)
 {
-    M_LexNode *current = root;
-    while (current != NULL)
-    {
-        M_LexNode *next = current->next;
-        free(current->value);
-        free(current);
-        current = next;
-    }
+  M_LexNode *current = root;
+  while (current != NULL)
+  {
+    M_LexNode *next = current->next;
+    free(current->value);
+    free(current);
+    current = next;
+  }
 }
