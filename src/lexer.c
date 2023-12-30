@@ -117,32 +117,42 @@ M_LexNode *lex(char *contents)
 
   while (peek(contents, i) != '\0')
   {
-    char c = peek(contents, i);
-    while (isspace(c))
+    char current_character = peek(contents, i);
+    while (isspace(current_character))
     {
       consume(contents, &i);
-      c = peek(contents, i);
+      current_character = peek(contents, i);
     }
-
-    if (!is_punctuation(c))
+    switch (current_character)
     {
-      char buf[BUFFER_SIZE];
-      int j = 0;
-
-      while (!isspace(c) && !is_punctuation(c))
-      {
-        buf[j++] = consume(contents, &i);
-        c = peek(contents, i);
-      }
-      buf[j] = '\0';
-      add_to_lexeme_llist(&root, buf);
-    }
-    else
+    case ';':
+    case ':':
+    case ',':
+    case '(':
+    case ')':
+    case '{':
+    case '}':
     {
       char special_buf[2];
       special_buf[0] = consume(contents, &i);
       special_buf[1] = '\0';
       add_to_lexeme_llist(&root, special_buf);
+      break;
+    }
+    default:
+    {
+      char buf[BUFFER_SIZE];
+      int j = 0;
+
+      while (!isspace(current_character) && !is_punctuation(current_character))
+      {
+        buf[j++] = consume(contents, &i);
+        current_character = peek(contents, i);
+      }
+      buf[j] = '\0';
+      add_to_lexeme_llist(&root, buf);
+      break;
+    }
     }
   }
 
