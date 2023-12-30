@@ -1,8 +1,7 @@
-#include "../include/tokenizer.h"
+#include "../include/lexer.h"
 #include <string.h>
 #include <ctype.h>
 #include <stdlib.h>
-#include <stdio.h>
 #include <stdbool.h>
 #define BUFFER_SIZE 1024
 
@@ -35,7 +34,7 @@ void add_to_lexeme_llist(M_LexNode **root, char *value)
   }
 }
 
-char peek(const char *const src, size_t current_index)
+static char peek(const char *const src, size_t current_index)
 {
   const size_t byte_offset = 1;
 
@@ -46,13 +45,12 @@ char peek(const char *const src, size_t current_index)
   return src[current_index];
 }
 
-char consume(const char *const src, size_t *current_index)
+static char consume(const char *const src, size_t *current_index)
 {
-
   return src[(*current_index)++];
 }
 
-bool is_punctuation(char c)
+static bool is_punctuation(char c)
 {
   return (c == '(' || c == ')' || c == ',' || c == ';' || c == ':' || c == '{' || c == '}');
 }
