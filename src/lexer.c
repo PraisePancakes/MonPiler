@@ -35,58 +35,6 @@ void add_to_lexeme_llist(M_LexNode **root, char *value)
   }
 }
 
-/*
-for (int i = 0; i < strlen(src); i++) {
-    while (peek(src, i) == '\0') {
-      i++;
-    }
-    int buffer_index = 0;
-    char buf[MAX_BUFF] = "";
-    while (peek(src, i) != '\0') {
-      char c = consume(src, i);
-      switch (c) {
-      case '(':
-        char buf[2] = "";
-        buf[0] = c;
-        buf[1] = '\0'
-        add_to_lexeme_llist(&root, buf);
-        i++;
-        break;
-      case ')':
-        char buf[2] = "";
-        buf[0] = c;
-        buf[1] = '\0'
-        add_to_lexeme_llist(&root, buf);
-        i++;
-        break;
-      case ',':
-        char buf[2] = "";
-        buf[0] = c;
-        buf[1] = '\0'
-        add_to_lexeme_llist(&root, buf);
-        i++;
-        break;
-      case ';':
-        char buf[2] = "";
-        buf[0] = c;
-        buf[1] = '\0'
-        add_to_lexeme_llist(&root, buf);
-        i++;
-        break;
-        default :
-      }
-      buf[buffer_index] = c;
-      buffer_index++;
-      i++;
-    }
-    buf[buffer_index] = '\0';
-    add_to_lexeme_llist(&root, buf);
-    printf("%s\n", buf);
-  }
-
-*/
-// implement peek and consume on characters
-
 char peek(const char *const src, size_t current_index)
 {
   const size_t byte_offset = 1;
