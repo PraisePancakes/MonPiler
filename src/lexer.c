@@ -5,7 +5,7 @@
 #include <stdbool.h>
 #define BUFFER_SIZE 1024
 
-M_LexNode *init_lexeme(char *value)
+static M_LexNode *init_lexeme(char *value)
 {
   M_LexNode *new_lexeme = malloc(sizeof(M_LexNode));
   new_lexeme->value = malloc(strlen(value) + 1);
@@ -15,7 +15,7 @@ M_LexNode *init_lexeme(char *value)
   return new_lexeme;
 }
 
-void add_to_lexeme_llist(M_LexNode **root, char *value)
+static void add_to_lexeme_llist(M_LexNode **root, char *value)
 {
   M_LexNode *new_lex_node = init_lexeme(value);
 

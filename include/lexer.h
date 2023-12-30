@@ -1,5 +1,6 @@
 #ifndef LEXER_H
 #define LEXER_H
+#include <stdbool.h>
 
 typedef struct M_LexNode
 {
@@ -7,7 +8,6 @@ typedef struct M_LexNode
     char *value;
 } M_LexNode;
 
-M_LexNode *init_lexeme(char *value);
 M_LexNode *lex(char *contents);
 void free_lexemes(M_LexNode *root);
 
