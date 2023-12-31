@@ -52,7 +52,7 @@ static char lexer_consume(const char *const src, size_t *current_index)
 
 static bool is_punctuation(char c)
 {
-  return (c == '(' || c == ')' || c == ',' || c == ';' || c == ':' || c == '{' || c == '}' || c == '\"');
+  return (c == '(' || c == ')' || c == ',' || c == ';' || c == ':' || c == '{' || c == '}' || c == '\"'); // TO DO add more punctuators
 }
 
 M_LexNode *lex(char *contents)
@@ -69,8 +69,17 @@ M_LexNode *lex(char *contents)
       lexer_consume(contents, &i);
       current_character = lexer_peek(contents, i);
     }
-    if (!is_punctuation(current_character) && !isspace(current_character))
+
+    if (is_punctuation(current_character))
     {
+      char punctuation_buf[2];
+      punctuation_buf[0] = lexer_consume(contents, &i);
+      punctuation_buf[1] = '\0';
+      add_to_lexeme_llist(&root, punctuation_buf);
+    }
+    else
+    {
+
       char buf[BUFFER_SIZE];
       int j = 0;
 
@@ -81,13 +90,6 @@ M_LexNode *lex(char *contents)
       }
       buf[j] = '\0';
       add_to_lexeme_llist(&root, buf);
-    }
-    else
-    {
-      char punctuation_buf[2];
-      punctuation_buf[0] = lexer_consume(contents, &i);
-      punctuation_buf[1] = '\0';
-      add_to_lexeme_llist(&root, punctuation_buf);
     }
   }
 
