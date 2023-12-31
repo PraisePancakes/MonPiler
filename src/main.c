@@ -35,7 +35,7 @@ int main(int argc, char *argv[])
     M_LexNode *lexeme_head = lex(new_file->contents);
     M_TNode *token_head = tokenize(lexeme_head);
 
-    // free initial UNLEXED toke_root
+    // free initial lexeme_root
     free_lexemes(lexeme_head);
     display_tokens(token_head);
 

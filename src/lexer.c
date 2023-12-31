@@ -34,7 +34,7 @@ static void add_to_lexeme_llist(M_LexNode **root, char *value)
   }
 }
 
-static char peek(const char *const src, size_t current_index)
+static char lexer_peek(const char *const src, size_t current_index)
 {
   const size_t byte_offset = 1;
 
@@ -45,14 +45,14 @@ static char peek(const char *const src, size_t current_index)
   return src[current_index];
 }
 
-static char consume(const char *const src, size_t *current_index)
+static char lexer_consume(const char *const src, size_t *current_index)
 {
   return src[(*current_index)++];
 }
 
 static bool is_punctuation(char c)
 {
-  return (c == '(' || c == ')' || c == ',' || c == ';' || c == ':' || c == '{' || c == '}');
+  return (c == '(' || c == ')' || c == ',' || c == ';' || c == ':' || c == '{' || c == '}' || c == '\"');
 }
 
 M_LexNode *lex(char *contents)
@@ -61,13 +61,13 @@ M_LexNode *lex(char *contents)
 
   int i = 0;
 
-  while (peek(contents, i) != '\0')
+  while (lexer_peek(contents, i) != '\0')
   {
-    char current_character = peek(contents, i);
+    char current_character = lexer_peek(contents, i);
     while (isspace(current_character))
     {
-      consume(contents, &i);
-      current_character = peek(contents, i);
+      lexer_consume(contents, &i);
+      current_character = lexer_peek(contents, i);
     }
     switch (current_character)
     {
@@ -78,9 +78,10 @@ M_LexNode *lex(char *contents)
     case ')':
     case '{':
     case '}':
+    case '\"':
     {
       char special_buf[2];
-      special_buf[0] = consume(contents, &i);
+      special_buf[0] = lexer_consume(contents, &i);
       special_buf[1] = '\0';
       add_to_lexeme_llist(&root, special_buf);
       break;
@@ -92,8 +93,8 @@ M_LexNode *lex(char *contents)
 
       while (!isspace(current_character) && !is_punctuation(current_character))
       {
-        buf[j++] = consume(contents, &i);
-        current_character = peek(contents, i);
+        buf[j++] = lexer_consume(contents, &i);
+        current_character = lexer_peek(contents, i);
       }
       buf[j] = '\0';
       add_to_lexeme_llist(&root, buf);
