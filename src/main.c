@@ -24,12 +24,9 @@ int main(int argc, char *argv[])
     const char *const path_to_src_file = argv[1];
 
     M_File *new_file = get_file(path_to_src_file);
-    int word_count = get_file_word_count(new_file);
-
-    new_file->word_count = word_count;
 
     // TEST ----------
-    printf("Word count : %d \n", word_count);
+    printf("Word count : %d \n", new_file->word_count);
     printf("contents : %s \n", new_file->contents);
 
     M_LexNode *lexeme_head = lex(new_file->contents);

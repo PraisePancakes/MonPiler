@@ -1,10 +1,10 @@
 
 #include "../include/tokenizer.h"
 #include "../include/lexer.h"
+#include "../include/hash.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include "../include/hash.h"
 
 void display_tokens(M_TNode *head)
 {

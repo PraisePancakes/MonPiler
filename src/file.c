@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <ctype.h>
 
-int get_file_length(FILE *fp)
+static int get_file_length(FILE *fp)
 {
     char c;
     int file_length = 0;
@@ -23,7 +23,7 @@ int get_file_length(FILE *fp)
     return file_length;
 }
 
-char *get_file_contents(FILE *fp, int file_length)
+static char *get_file_contents(FILE *fp, int file_length)
 {
 
     char *filestream_buf = malloc(file_length + 1);
@@ -39,6 +39,31 @@ char *get_file_contents(FILE *fp, int file_length)
     filestream_buf[i] = '\0';
 
     return filestream_buf;
+}
+
+static int get_file_word_count(M_File *file)
+{
+    int word_count = 0;
+    for (int i = 0; i < file->length; i++)
+    {
+        // get rid of leading spaces
+
+        while (isspace(file->contents[i]))
+        {
+            i++;
+        }
+
+        if (!isspace(file->contents[i]))
+        {
+            while (!isspace(file->contents[i]))
+            {
+                i++;
+            }
+            word_count++;
+        }
+    }
+
+    return word_count;
 }
 
 M_File *get_file(const char *const filepath)
@@ -62,31 +87,9 @@ M_File *get_file(const char *const filepath)
     strcpy(file->contents, filestream_buf);
     file->length = file_length;
 
+    int word_count = get_file_word_count(file);
+    file->word_count = word_count;
+
     fclose(fp);
     return file;
-}
-
-int get_file_word_count(M_File *file)
-{
-    int word_count = 0;
-    for (int i = 0; i < file->length; i++)
-    {
-        // get rid of leading spaces
-
-        while (isspace(file->contents[i]))
-        {
-            i++;
-        }
-
-        if (!isspace(file->contents[i]))
-        {
-            while (!isspace(file->contents[i]))
-            {
-                i++;
-            }
-            word_count++;
-        }
-    }
-
-    return word_count;
 }

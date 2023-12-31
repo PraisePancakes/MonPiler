@@ -9,9 +9,6 @@ typedef struct M_File
     int length;
 } M_File;
 
-int get_file_length(FILE *fp);
-char *get_file_contents(FILE *fp, int file_length);
 M_File *get_file(const char *const filepath);
-int get_file_word_count(M_File *file);
 
 #endif

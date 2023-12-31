@@ -1,6 +1,5 @@
 #ifndef LEXER_H
 #define LEXER_H
-#include <stdbool.h>
 
 typedef struct M_LexNode
 {

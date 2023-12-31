@@ -69,24 +69,7 @@ M_LexNode *lex(char *contents)
       lexer_consume(contents, &i);
       current_character = lexer_peek(contents, i);
     }
-    switch (current_character)
-    {
-    case ';':
-    case ':':
-    case ',':
-    case '(':
-    case ')':
-    case '{':
-    case '}':
-    case '\"':
-    {
-      char special_buf[2];
-      special_buf[0] = lexer_consume(contents, &i);
-      special_buf[1] = '\0';
-      add_to_lexeme_llist(&root, special_buf);
-      break;
-    }
-    default:
+    if (!is_punctuation(current_character) && !isspace(current_character))
     {
       char buf[BUFFER_SIZE];
       int j = 0;
@@ -98,8 +81,13 @@ M_LexNode *lex(char *contents)
       }
       buf[j] = '\0';
       add_to_lexeme_llist(&root, buf);
-      break;
     }
+    else
+    {
+      char punctuation_buf[2];
+      punctuation_buf[0] = lexer_consume(contents, &i);
+      punctuation_buf[1] = '\0';
+      add_to_lexeme_llist(&root, punctuation_buf);
     }
   }
 
