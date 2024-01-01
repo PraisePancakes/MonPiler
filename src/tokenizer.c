@@ -91,135 +91,14 @@ M_TNode *tokenize(M_LexNode *head)
         strcpy(new_token_node->data->token_value, lexeme_current_node->value);
         switch (hash_value_from_key(new_token_node->data->token_value))
         {
-        case T_AND:
-            new_token_node->data->token_type = T_AND;
-            break;
-        case T_ARROW:
-            new_token_node->data->token_type = T_ARROW;
-            break;
-        case T_BANG:
-            new_token_node->data->token_type = T_BANG;
-            break;
-        case T_BANG_EQUALS:
-            new_token_node->data->token_type = T_BANG_EQUALS;
-            break;
-        case T_CHAR:
-            new_token_node->data->token_type = T_CHAR;
-            break;
-        case T_CHAR_ARRAY:
-            new_token_node->data->token_type = T_CHAR_ARRAY;
-            break;
-        case T_COLON:
-            new_token_node->data->token_type = T_COLON;
-            break;
-        case T_COMMA:
-            new_token_node->data->token_type = T_COMMA;
-            break;
-        case T_DOT:
-            new_token_node->data->token_type = T_DOT;
-            break;
-        case T_DOUBLE:
-            new_token_node->data->token_type = T_DOUBLE;
-            break;
-        case T_DOUBLE_ARRAY:
-            new_token_node->data->token_type = T_DOUBLE_ARRAY;
-            break;
-        case T_ELSE:
-            new_token_node->data->token_type = T_ELSE;
-            break;
-        case T_EQUAL:
-            new_token_node->data->token_type = T_EQUAL;
-            break;
-        case T_EQUAL_EQUAL:
-            new_token_node->data->token_type = T_EQUAL_EQUAL;
-            break;
-        case T_FALSE:
-            new_token_node->data->token_type = T_FALSE;
-            break;
-        case T_FLOAT:
-            new_token_node->data->token_type = T_FLOAT;
-            break;
-        case T_FLOAT_ARRAY:
-            new_token_node->data->token_type = T_FLOAT_ARRAY;
-            break;
-        case T_FOR:
-            new_token_node->data->token_type = T_FOR;
-            break;
-        case T_FUNCTION:
-            new_token_node->data->token_type = T_FUNCTION;
-            break;
-        case T_GT:
-            new_token_node->data->token_type = T_GT;
-            break;
-        case T_IF:
-            new_token_node->data->token_type = T_IF;
-            break;
-        case T_INT:
-            new_token_node->data->token_type = T_INT;
-            break;
-        case T_INT_ARRAY:
-            new_token_node->data->token_type = T_INT_ARRAY;
-            break;
-        case T_INTEGER_LITERAL:
-            new_token_node->data->token_type = T_INTEGER_LITERAL;
-            break;
-        case T_LBRACE:
-            new_token_node->data->token_type = T_LBRACE;
-            break;
-        case T_LCURL:
-            new_token_node->data->token_type = T_LCURL;
-            break;
-        case T_LPAREN:
-            new_token_node->data->token_type = T_LPAREN;
-            break;
-        case T_LT:
-            new_token_node->data->token_type = T_LT;
-            break;
-        case T_MINUS:
-            new_token_node->data->token_type = T_MINUS;
-            break;
-        case T_NULL:
-            new_token_node->data->token_type = T_NULL;
-            break;
-        case T_OR:
-            new_token_node->data->token_type = T_OR;
-            break;
-        case T_PLUS:
-            new_token_node->data->token_type = T_PLUS;
-            break;
-        case T_PRINT:
-            new_token_node->data->token_type = T_PRINT;
-            break;
-        case T_RETURN:
-            new_token_node->data->token_type = T_RETURN;
-            break;
-        case T_RBRACE:
-            new_token_node->data->token_type = T_RBRACE;
-            break;
-        case T_RCURL:
-            new_token_node->data->token_type = T_RCURL;
-            break;
-        case T_RPAREN:
-            new_token_node->data->token_type = T_RPAREN;
-            break;
-        case T_SEMI_COLON:
-            new_token_node->data->token_type = T_SEMI_COLON;
-            break;
-        case T_SLASH:
-            new_token_node->data->token_type = T_SLASH;
-            break;
-        case T_STAR:
-            new_token_node->data->token_type = T_STAR;
-            break;
-        case T_STRING_LITERAL:
+        case '\"':
             new_token_node->data->token_type = T_STRING_LITERAL;
-
             break;
-        case T_WHILE:
-            new_token_node->data->token_type = T_WHILE;
+        case BADKEY:
+            new_token_node->data->token_type = T_IDENTIFIER_LITERAL;
             break;
         default:
-            new_token_node->data->token_type = T_IDENTIFIER_LITERAL;
+            new_token_node->data->token_type = hash_value_from_key(new_token_node->data->token_value);
             break;
         }
 

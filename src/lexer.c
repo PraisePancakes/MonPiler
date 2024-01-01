@@ -52,7 +52,7 @@ static char lexer_consume(const char *const src, size_t *current_index)
 
 static bool is_punctuation(char c)
 {
-  return (c == '(' || c == ')' || c == ',' || c == ';' || c == ':' || c == '{' || c == '}' || c == '\"'); // TO DO add more punctuators
+  return (c == '(' || c == ')' || c == ',' || c == ';' || c == ':' || c == '{' || c == '}' || c == '\"'); // TO DO add more punctuators maybe 'switch' it up?
 }
 
 M_LexNode *lex(char *contents)
@@ -79,7 +79,6 @@ M_LexNode *lex(char *contents)
     }
     else
     {
-
       char buf[BUFFER_SIZE];
       int j = 0;
 
