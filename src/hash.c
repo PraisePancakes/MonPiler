@@ -24,12 +24,12 @@ int hash_value_from_key(char *key)
     }
     for (i = 0; i < NKEYS; i++)
     {
-        t_symstruct *string = lookuptable + i;
+        M_THash *string = lookuptable + i;
         if (strcmp(string->key, key) == 0)
         {
             return string->value;
         }
     }
 
-    return BADKEY;
+    return IDENTIFIER;
 }

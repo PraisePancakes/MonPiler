@@ -93,8 +93,9 @@ M_TNode *tokenize(M_LexNode *head)
         {
         case '\"':
             new_token_node->data->token_type = T_STRING_LITERAL;
+            // while token->next != T_STRING_LITERAL, token->type = T_STRING_LITERAL
             break;
-        case BADKEY:
+        case IDENTIFIER:
             new_token_node->data->token_type = T_IDENTIFIER_LITERAL;
             break;
         default:

@@ -1,7 +1,7 @@
 // hash a string to a key : value
 #ifndef HASH_H
 #define HASH_H
-#define BADKEY -1
+#define IDENTIFIER -1
 enum M_TOKEN_TYPE
 {
     T_AND,
@@ -49,13 +49,13 @@ enum M_TOKEN_TYPE
     T_WHILE,
 } token_type;
 
-typedef struct t_symstruct
+typedef struct M_THash
 {
     char *key;
     int value;
-} t_symstruct;
+} M_THash;
 
-static t_symstruct lookuptable[] = {
+static M_THash lookuptable[] = {
     {"&&", T_AND},
     {"->", T_ARROW},
     {"!", T_BANG},
@@ -76,7 +76,6 @@ static t_symstruct lookuptable[] = {
     {"for", T_FOR},
     {"function", T_FUNCTION},
     {">", T_GT},
-    {"identifier_literal", T_IDENTIFIER_LITERAL}, // Assuming this is a placeholder for other identifiers
     {"if", T_IF},
     {"int", T_INT},
     {"int[]", T_INT_ARRAY},
@@ -101,7 +100,7 @@ static t_symstruct lookuptable[] = {
     {"while", T_WHILE},
 };
 
-#define NKEYS (sizeof(lookuptable) / sizeof(t_symstruct))
+#define NKEYS (sizeof(lookuptable) / sizeof(M_THash))
 
 int hash_value_from_key(char *key);
 
