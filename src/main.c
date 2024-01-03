@@ -5,6 +5,7 @@
 #include "../include/tokenizer.h"
 #include "../include/lexer.h"
 #include "../include/parser.h"
+#include "../include/cgen.h"
 
 void usage(char *argv[])
 {
@@ -36,7 +37,23 @@ int main(int argc, char *argv[])
     free_lexemes(lexeme_head);
     display_tokens(token_head);
 
-    // pass lexed token root into parser
+    NodeFunction *parsed = parse_into_converted_function(token_head);
+    printf("%s %s (", parsed->type->data->token_value, parsed->identifier->data->token_value);
+
+    if (parsed->param_head == NULL)
+    {
+        printf("NO PARAMS");
+    }
+    else
+    {
+        ParamNode *temp = parsed->param_head;
+        while (temp != NULL)
+        {
+            printf("%s %s , ", temp->data->type->data->token_value, temp->data->identifier->data->token_value);
+            temp = temp->next_param;
+        }
+        printf(")");
+    }
 
     return EXIT_SUCCESS;
 }

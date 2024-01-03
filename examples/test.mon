@@ -1,4 +1,4 @@
-        function main : int() {
+function main : int(a : int, b : char) {
             print("hello");
     return 0;
 }

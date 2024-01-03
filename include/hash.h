@@ -1,7 +1,6 @@
 // hash a string to a key : value
 #ifndef HASH_H
 #define HASH_H
-#define IDENTIFIER -1
 enum M_TOKEN_TYPE
 {
     T_AND,

@@ -31,5 +31,5 @@ int hash_value_from_key(char *key)
         }
     }
 
-    return IDENTIFIER;
+    return T_IDENTIFIER_LITERAL;
 }
