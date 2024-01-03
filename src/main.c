@@ -12,6 +12,12 @@ void usage(char *argv[])
     printf("USAGE: %s <path/to/inputfile.mon> \n", argv[0]);
 }
 
+void run_gcc_executable()
+{
+    system("gcc gen.c -o gen");
+    system("gen.exe");
+}
+
 int main(int argc, char *argv[])
 {
 
@@ -26,34 +32,22 @@ int main(int argc, char *argv[])
 
     M_File *new_file = get_file(path_to_src_file);
 
-    // TEST ----------
-    printf("Word count : %d \n", new_file->word_count);
-    printf("contents : %s \n", new_file->contents);
-
     M_LexNode *lexeme_head = lex(new_file->contents);
     M_TNode *token_head = tokenize(lexeme_head);
 
     // free initial lexeme_root
     free_lexemes(lexeme_head);
-    display_tokens(token_head);
+    // display_tokens(token_head);
 
-    NodeFunction *parsed = parse_into_converted_function(token_head);
-    printf("%s %s (", parsed->type->data->token_value, parsed->identifier->data->token_value);
+    NodeFunction *root = parse_into_converted_function(token_head);
+    Program *parsed_program = parse_program(root);
 
-    if (parsed->param_head == NULL)
-    {
-        printf("NO PARAMS");
-    }
-    else
-    {
-        ParamNode *temp = parsed->param_head;
-        while (temp != NULL)
-        {
-            printf("%s %s , ", temp->data->type->data->token_value, temp->data->identifier->data->token_value);
-            temp = temp->next_param;
-        }
-        printf(")");
-    }
+    char *parsed_to_string = stringify_parsed_program(parsed_program);
+    M_CFile *converted_file = get_gcc_compatabile_file(parsed_to_string);
+
+    write_to_gcc_compatible_file(converted_file);
+
+    run_gcc_executable();
 
     return EXIT_SUCCESS;
 }

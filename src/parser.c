@@ -89,7 +89,68 @@ NodeFunction *parse_into_converted_function(M_TNode *function_root_node)
         }
     }
 
+    temp = param_iterator->next;
     // get contents
+    char contents_buf[2048];
+    int i = 0;
+    contents_buf[0] = '\0';
 
+    while (temp != NULL)
+    {
+        strcat(contents_buf, temp->data->token_value);
+        strcat(contents_buf, " ");
+        i++;
+        i += strlen(temp->data->token_value);
+        temp = temp->next;
+    }
+
+    contents_buf[i] = '\0';
+
+    parsed_function->contents = malloc(i * sizeof(char));
+    strcpy(parsed_function->contents, contents_buf);
     return parsed_function;
+}
+
+Program *parse_program(NodeFunction *root)
+{
+    Program *prog = malloc(sizeof(Program));
+    prog->root = root;
+    return prog;
+}
+
+char *stringify_parsed_program(Program *parsed_program)
+{
+    char *prog_buf = malloc(2048 * sizeof(char));
+    prog_buf[0] = '\0';
+    strcat(prog_buf, "#include <stdio.h>\n");
+    strcat(prog_buf, "#include <stdlib.h>\n");
+
+    strcat(prog_buf, parsed_program->root->type->data->token_value);
+    strcat(prog_buf, " ");
+    strcat(prog_buf, parsed_program->root->identifier->data->token_value);
+    strcat(prog_buf, "(");
+
+    ParamNode *temp = parsed_program->root->param_head;
+    while (temp != NULL)
+    {
+        strcat(prog_buf, temp->data->type->data->token_value);
+        strcat(prog_buf, " ");
+        strcat(prog_buf, temp->data->identifier->data->token_value);
+
+        // Check if there is another parameter before adding a comma
+        if (temp->next_param != NULL)
+        {
+            strcat(prog_buf, ",");
+        }
+
+        temp = temp->next_param;
+    }
+
+    strcat(prog_buf, ")");
+
+    strcat(prog_buf, parsed_program->root->contents);
+
+    prog_buf[strlen(prog_buf)] = '\0';
+
+    return prog_buf;
 }

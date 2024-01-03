@@ -22,6 +22,7 @@ typedef struct NodeFunction
     M_TNode *type;
     M_TNode *identifier;
     ParamNode *param_head;
+    char *contents;
     // contents
 
 } NodeFunction;
@@ -32,5 +33,7 @@ typedef struct Program
 } Program;
 
 NodeFunction *parse_into_converted_function(M_TNode *function_root_node);
+Program *parse_program(NodeFunction *root);
+char *stringify_parsed_program(Program *parsed_program);
 
 #endif

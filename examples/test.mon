@@ -1,4 +1,6 @@
-function main : int(a : int, b : char) {
-            print("hello");
+
+
+function main : int() {
+            printf("hello");
     return 0;
 }
