@@ -2,6 +2,10 @@
 
 function main : int() {
     x : int = 4;
-    printf("hello");
+    y : int = 5;
+
+    z : int = x + y;
+    
+    printf("%d", z);
     return 0;
 }

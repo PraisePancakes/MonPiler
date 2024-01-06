@@ -173,8 +173,9 @@ NodeFunction *parse_into_converted_function(M_TNode *function_root_node)
         case T_STRING_LITERAL:
         case T_EQUAL:
         case T_RETURN:
-
+        case T_PLUS:
         case T_RBRACE:
+        case T_COMMA:
         case T_SEMI_COLON:
             strcat(content_buf, body_iterator->data->token_value);
             break;
@@ -188,7 +189,6 @@ NodeFunction *parse_into_converted_function(M_TNode *function_root_node)
     parsed_function->contents = malloc(strlen(content_buf) + 1);
 
     strcpy(parsed_function->contents, content_buf);
-
     return parsed_function;
 }
 
