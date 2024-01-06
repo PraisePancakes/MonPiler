@@ -4,37 +4,93 @@
 #include <stdio.h>
 #include <string.h>
 
+char *parse_into_converted_expr(M_TNode *current_token)
+{
+
+    M_TNode *temp = current_token;
+
+    if (temp->next->data->token_type != T_COLON)
+    {
+        return current_token->data->token_value;
+    }
+
+    int ident_length = strlen(temp->data->token_value);
+    char ident_buf[ident_length + 1];
+    strcpy(ident_buf, temp->data->token_value);
+
+    int type_len = 0;
+    char *type_buf = NULL;
+
+    while (temp != NULL && temp->data->token_type != T_SEMI_COLON)
+    {
+        if (temp->data->token_type == T_COLON)
+        {
+            temp = temp->next;
+            continue;
+        }
+
+        switch (temp->data->token_type)
+        {
+        case T_INT:
+        case T_FLOAT:
+        case T_INT_ARRAY:
+        case T_FLOAT_ARRAY:
+        case T_DOUBLE_ARRAY:
+        case T_CHAR:
+        case T_CHAR_ARRAY:
+            type_len = strlen(temp->data->token_value);
+            type_buf = malloc(type_len + 1);
+            strcpy(type_buf, temp->data->token_value);
+            break;
+
+        default:
+            break;
+        }
+
+        temp = temp->next;
+    }
+
+    char *parsed_expr = malloc(ident_length + type_len + 1); // +2 for '=' and null terminator
+    parsed_expr[0] = '\0';
+
+    strcat(parsed_expr, type_buf);
+    strcat(parsed_expr, " ");
+    strcat(parsed_expr, ident_buf);
+
+    return parsed_expr;
+}
+
 NodeFunction *parse_into_converted_function(M_TNode *function_root_node)
 {
     NodeFunction *parsed_function = malloc(sizeof(NodeFunction));
     parsed_function->type = malloc(sizeof(M_TNode));
     parsed_function->identifier = malloc(sizeof(M_TNode));
 
-    M_TNode *temp = function_root_node;
+    M_TNode *token_iterator = function_root_node;
 
     // get func signature
-    while (temp != NULL && temp->data->token_type != T_LPAREN)
+    while (token_iterator != NULL && token_iterator->data->token_type != T_LPAREN)
     {
-        switch (hash_value_from_key(temp->data->token_value))
+        switch (hash_value_from_key(token_iterator->data->token_value))
         {
         case T_INT:
-            parsed_function->type = temp;
+            parsed_function->type = token_iterator;
             break;
         case T_IDENTIFIER_LITERAL:
-            parsed_function->identifier = temp;
+            parsed_function->identifier = token_iterator;
             break;
         default:
             break;
         }
-        temp = temp->next;
+        token_iterator = token_iterator->next;
     }
 
     // get params
-    // temp = (
+    // token_iterator = (
     // if params enter while
-    temp = temp->next;
-    M_TNode *param_iterator = temp;
-    // temp = 'a'
+    token_iterator = token_iterator->next;
+    M_TNode *param_iterator = token_iterator;
+    // token_iterator = 'a'
     parsed_function->param_head = NULL;
 
     while (param_iterator != NULL && param_iterator->data->token_type != T_RPAREN)
@@ -89,25 +145,50 @@ NodeFunction *parse_into_converted_function(M_TNode *function_root_node)
         }
     }
 
-    temp = param_iterator->next;
-    // get contents
-    char contents_buf[2048];
-    int i = 0;
-    contents_buf[0] = '\0';
+    token_iterator = param_iterator->next;
 
-    while (temp != NULL)
+    M_TNode *body_iterator = token_iterator; // -> {
+    char content_buf[2048];
+    content_buf[0] = '\0';
+
+    while (body_iterator != NULL)
     {
-        strcat(contents_buf, temp->data->token_value);
-        strcat(contents_buf, " ");
-        i++;
-        i += strlen(temp->data->token_value);
-        temp = temp->next;
+        switch (body_iterator->data->token_type)
+        {
+        case T_IDENTIFIER_LITERAL:
+        {
+            char *parsed_expression = parse_into_converted_expr(body_iterator);
+            strcat(content_buf, parsed_expression);
+        }
+
+        break;
+        case T_INTEGER_LITERAL:
+            strcat(content_buf, " ");
+            strcat(content_buf, body_iterator->data->token_value);
+            break;
+        case T_LBRACE:
+        case T_LPAREN:
+        case T_RPAREN:
+        case T_PRINT:
+        case T_STRING_LITERAL:
+        case T_EQUAL:
+        case T_RETURN:
+
+        case T_RBRACE:
+        case T_SEMI_COLON:
+            strcat(content_buf, body_iterator->data->token_value);
+            break;
+        default:
+            break;
+        }
+
+        body_iterator = body_iterator->next;
     }
 
-    contents_buf[i] = '\0';
+    parsed_function->contents = malloc(strlen(content_buf) + 1);
 
-    parsed_function->contents = malloc(i * sizeof(char));
-    strcpy(parsed_function->contents, contents_buf);
+    strcpy(parsed_function->contents, content_buf);
+
     return parsed_function;
 }
 
@@ -120,14 +201,15 @@ Program *parse_program(NodeFunction *root)
 
 char *stringify_parsed_program(Program *parsed_program)
 {
+
     char *prog_buf = malloc(2048 * sizeof(char));
     prog_buf[0] = '\0';
     strcat(prog_buf, "#include <stdio.h>\n");
     strcat(prog_buf, "#include <stdlib.h>\n");
 
-    strcat(prog_buf, parsed_program->root->type->data->token_value);
+    strcat(prog_buf, parsed_program->root->type->data->token_value); // int
     strcat(prog_buf, " ");
-    strcat(prog_buf, parsed_program->root->identifier->data->token_value);
+    strcat(prog_buf, parsed_program->root->identifier->data->token_value); // main
     strcat(prog_buf, "(");
 
     ParamNode *temp = parsed_program->root->param_head;
@@ -149,8 +231,6 @@ char *stringify_parsed_program(Program *parsed_program)
     strcat(prog_buf, ")");
 
     strcat(prog_buf, parsed_program->root->contents);
-
-    prog_buf[strlen(prog_buf)] = '\0';
 
     return prog_buf;
 }

@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-
+#include <stdbool.h>
 void display_tokens(M_TNode *head)
 {
     M_TNode *temp = head;
@@ -64,9 +64,27 @@ void display_tokens(M_TNode *head)
     }
 }
 
+M_TNode *create_token(char *value)
+{
+    M_TNode *new_token_node = malloc(sizeof(M_TNode));
+    new_token_node->data = malloc(sizeof(M_Token));
+    new_token_node->data->token_value = malloc(strlen(value) + 1);
+    new_token_node->next = NULL;
+
+    if (new_token_node->data == NULL || new_token_node->data->token_value == NULL)
+    {
+        fprintf(stderr, "ERROR: mallocating lexed_tokens or its value failed");
+        free(new_token_node->data->token_value);
+        free(new_token_node->data);
+        free(new_token_node);
+        exit(EXIT_FAILURE);
+    }
+
+    return new_token_node;
+}
+
 M_TNode *tokenize(M_LexNode *head)
 {
-
     M_TNode *token_head = NULL;
     M_TNode *temp = NULL;
     M_LexNode *lexeme_current_node = head;
@@ -74,32 +92,45 @@ M_TNode *tokenize(M_LexNode *head)
     while (lexeme_current_node != NULL)
     {
 
-        M_TNode *new_token_node = malloc(sizeof(M_TNode));
-        new_token_node->data = malloc(sizeof(M_Token));
-        new_token_node->data->token_value = malloc(strlen(lexeme_current_node->value) + 1);
-        new_token_node->next = NULL;
+        M_TNode *new_token_node = create_token(lexeme_current_node->value);
 
-        if (new_token_node->data == NULL || new_token_node->data->token_value == NULL)
+        switch (hash_value_from_key(lexeme_current_node->value))
         {
-            fprintf(stderr, "ERROR: mallocating lexed_tokens or its value failed");
-            free(new_token_node->data->token_value);
-            free(new_token_node->data);
-            free(new_token_node);
-            exit(EXIT_FAILURE);
-        }
-
-        strcpy(new_token_node->data->token_value, lexeme_current_node->value);
-        switch (hash_value_from_key(new_token_node->data->token_value))
-        {
-        case '\"':
+        case T_STRING_LITERAL:
             new_token_node->data->token_type = T_STRING_LITERAL;
-            // while token->next != T_STRING_LITERAL, token->type = T_STRING_LITERAL
+
+            strcat(new_token_node->data->token_value, lexeme_current_node->value);
+            lexeme_current_node = lexeme_current_node->next;
+
+            while (lexeme_current_node != NULL && hash_value_from_key(lexeme_current_node->value) != T_STRING_LITERAL)
+            {
+                strcat(new_token_node->data->token_value, lexeme_current_node->value);
+                if (lexeme_current_node->next != NULL && hash_value_from_key(lexeme_current_node->next->value) != T_STRING_LITERAL)
+                {
+                    strcat(new_token_node->data->token_value, " ");
+                }
+
+                lexeme_current_node = lexeme_current_node->next;
+            }
+
+            if (lexeme_current_node != NULL && hash_value_from_key(lexeme_current_node->value) == T_STRING_LITERAL)
+            {
+                strcat(new_token_node->data->token_value, lexeme_current_node->value);
+            }
+            else
+            {
+                fprintf(stderr, "ERROR: Unclosed string literal");
+                exit(EXIT_FAILURE);
+            }
+
             break;
         case T_IDENTIFIER_LITERAL:
             new_token_node->data->token_type = T_IDENTIFIER_LITERAL;
+            strcpy(new_token_node->data->token_value, lexeme_current_node->value);
             break;
         default:
-            new_token_node->data->token_type = hash_value_from_key(new_token_node->data->token_value);
+            new_token_node->data->token_type = hash_value_from_key(lexeme_current_node->value);
+            strcpy(new_token_node->data->token_value, lexeme_current_node->value);
             break;
         }
 

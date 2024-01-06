@@ -1,6 +1,7 @@
 
 
 function main : int() {
-            printf("hello");
+    x : int = 4;
+    printf("hello");
     return 0;
 }

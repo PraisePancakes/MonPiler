@@ -18,6 +18,7 @@ void run_gcc_executable()
     system("gen.exe");
 }
 
+// TO : DO = REIMPLEMENT THIS TRANSPILER TO BE USE CASED MORE GENERALLY RATHER THAN ONLY FOR A HELLO WORLD, IMPLEMENT A SUCCESSFULL PARSE TREE, IMPLEMENT ERRORS
 int main(int argc, char *argv[])
 {
 
@@ -35,7 +36,7 @@ int main(int argc, char *argv[])
     M_LexNode *lexeme_head = lex(new_file->contents);
     M_TNode *token_head = tokenize(lexeme_head);
 
-    // free initial lexeme_root
+    // free initial lexeme list
     free_lexemes(lexeme_head);
     // display_tokens(token_head);
 
@@ -46,6 +47,8 @@ int main(int argc, char *argv[])
     M_CFile *converted_file = get_gcc_compatabile_file(parsed_to_string);
 
     write_to_gcc_compatible_file(converted_file);
+
+    free(root->contents);
 
     run_gcc_executable();
 

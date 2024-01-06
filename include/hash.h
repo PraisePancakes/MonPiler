@@ -87,7 +87,7 @@ static M_THash lookuptable[] = {
     {"NULL", T_NULL},
     {"||", T_OR},
     {"+", T_PLUS},
-    {"print", T_PRINT},
+    {"printf", T_PRINT},
     {"return", T_RETURN},
     {"}", T_RBRACE},
     {"}", T_RCURL},

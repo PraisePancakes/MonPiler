@@ -3,7 +3,7 @@
 #include "tokenizer.h"
 #define BUFFER 256
 
-// TO BE IMPLEMENTED :: parse the linked list of tokens into c syntax, write the resulting syntax to a c file.
+// TO DO :: refactor parser to be more generalized
 
 typedef struct Param
 {
@@ -23,7 +23,6 @@ typedef struct NodeFunction
     M_TNode *identifier;
     ParamNode *param_head;
     char *contents;
-    // contents
 
 } NodeFunction;
 
