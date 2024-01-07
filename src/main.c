@@ -18,7 +18,8 @@ void run_gcc_executable()
     system("gen.exe");
 }
 
-// TO : DO = REIMPLEMENT THIS TRANSPILER TO BE USE CASED MORE GENERALLY RATHER THAN ONLY FOR A HELLO WORLD, IMPLEMENT A SUCCESSFULL PARSE TREE, IMPLEMENT ERRORS
+// TO : DO = fix bug where lexer wont work on reassignments
+
 int main(int argc, char *argv[])
 {
 
@@ -38,7 +39,7 @@ int main(int argc, char *argv[])
 
     // free initial lexeme list
     free_lexemes(lexeme_head);
-    // display_tokens(token_head);
+    display_tokens(token_head);
 
     NodeFunction *root = parse_into_converted_function(token_head);
     Program *parsed_program = parse_program(root);

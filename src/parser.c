@@ -176,6 +176,9 @@ NodeFunction *parse_into_converted_function(M_TNode *function_root_node)
         case T_PLUS:
         case T_RBRACE:
         case T_COMMA:
+        case T_STAR:
+        case T_SLASH:
+        case T_MINUS:
         case T_SEMI_COLON:
             strcat(content_buf, body_iterator->data->token_value);
             break;

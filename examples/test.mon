@@ -1,11 +1,12 @@
 
-
 function main : int() {
-    x : int = 4;
     y : int = 5;
 
-    z : int = x + y;
-    
-    printf("%d", z);
+    z : int = x - y;
+
+    x = z + x - y * 2;
+
+  
+    printf("%d", x);
     return 0;
 }
